@@ -26,8 +26,19 @@ struct FuzzHelper {
     void run(stream_parser& p) {
         boost::system::error_code ec;
 
+        for(const char ch : jsontext)
+        {
+            string_view sw{&ch, 1};
+            p.write_some( sw, ec);
+
+            if(ec)
+            {
+                res = false;
+                return;
+            }
+        }
+
         // Write the first part of the buffer
-        p.write( jsontext, ec);
 
         if(! ec)
             p.finish( ec );
